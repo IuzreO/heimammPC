@@ -4,6 +4,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 //导入子组件
 import test from '@/views/test.vue'
+import login from '@/views/login/login.vue'
 //3.注册Vue.use(vueRouter)
 Vue.use(VueRouter)
 //4.实例化和配置
@@ -12,6 +13,10 @@ const router = new VueRouter({
         {
             path: '/test',
             component: test
+        },
+        {
+            path: '/login',
+            component: login
         }
     ]
 })
