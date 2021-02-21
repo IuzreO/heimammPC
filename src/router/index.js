@@ -17,7 +17,12 @@ const router = new VueRouter({
         {
             path: '/login',
             component: login
+        },
+        {
+            path: '*',
+            redirect: '/login'
         }
+
     ]
 })
 //5.暴露给外界

@@ -8,8 +8,52 @@
         </span>
         <span class="heima">黑马面面</span>
         <span class="bar"></span>
-        <span class="register">用户登录</span>
+        <span class="userLogin">用户登录</span>
       </div>
+      <!-- element表单 -->
+      <el-form ref="form" :model="form">
+        <!-- 用户电话号码 -->
+        <el-form-item class="loginPhone">
+          <el-input placeholder="请输入手机号" prefix-icon="el-icon-user" v-model="form.phone"></el-input>
+        </el-form-item>
+        <!-- 用户密码 -->
+        <el-form-item>
+          <el-input
+            placeholder="请输入密码"
+            prefix-icon="el-icon-lock"
+            v-model="form.password"
+            show-password
+          ></el-input>
+        </el-form-item>
+        <!-- 验证码 -->
+        <el-form-item>
+          <el-row>
+            <el-col :span="16">
+              <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="form.code"></el-input>
+            </el-col>
+            <el-col :span="8">
+              <img :src="baseUrl+'/captcha?type=login'" alt class="code" />
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <!-- 协议 -->
+        <el-form-item>
+          <el-checkbox v-model="checked"></el-checkbox>
+          <span class="agreement">
+            我已阅读并同意
+            <el-link type="primary">用户协议</el-link>和
+            <el-link type="primary">隐私条款</el-link>
+          </span>
+        </el-form-item>
+        <!-- 登录按钮-->
+        <el-form-item>
+          <el-button class="enter" type="primary">登录</el-button>
+        </el-form-item>
+        <!-- 注册按钮 -->
+        <el-form-item>
+          <el-button class="register" type="primary">注册</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <!-- 右侧图片区域 -->
     <div class="right">
@@ -19,7 +63,19 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      form: {
+        phone: "",
+        password: "",
+        key: "",
+      },
+      baseUrl: "http://127.0.0.1/heimamm/public",
+      checked: false,
+    };
+  },
+};
 </script>
 
 <style lang="less">
@@ -56,7 +112,7 @@ export default {};
         height: 28px;
         background: #c7c7c7;
       }
-      .register {
+      .userLogin {
         font-size: 22px;
         font-family: PingFangSC;
         font-weight: 400;
@@ -65,6 +121,25 @@ export default {};
       span {
         margin-right: 15px;
       }
+    }
+    .loginPhone {
+      margin-top: 31px;
+    }
+    .code {
+      height: 40px;
+      width: 100%;
+    }
+    .agreement {
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: #999999;
+    }
+    .enter,
+    .register {
+      width: 394px;
+      height: 40px;
+      background: #1493fa;
+      border-radius: 4px;
     }
   }
   .right {
