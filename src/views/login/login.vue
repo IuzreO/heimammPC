@@ -51,7 +51,7 @@
         </el-form-item>
         <!-- 注册按钮 -->
         <el-form-item>
-          <el-button @click="reset" class="register" type="primary">注册</el-button>
+          <el-button @click="signIn" class="register" type="primary">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -59,10 +59,14 @@
     <div class="right">
       <img class="img" src="@/assets/login_banner_ele@2x.png" alt />
     </div>
+    <!-- 使用子组件 -->
+    <register ref="signIn"></register>
   </div>
 </template>
 
 <script>
+//导入子组件
+import register from "./register";
 export default {
   data() {
     return {
@@ -117,10 +121,13 @@ export default {
         }
       });
     },
-    reset() {
-      //重置表单
-      this.$refs.form.resetFields();
+    signIn() {
+      this.$refs.signIn.isShowDialog = true;
     },
+  },
+  //注册组件
+  components: {
+    register,
   },
 };
 </script>
