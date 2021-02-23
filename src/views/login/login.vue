@@ -32,7 +32,7 @@
               <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="form.code"></el-input>
             </el-col>
             <el-col :span="8">
-              <img :src="baseUrl+'/captcha?type=login'" alt class="code" />
+              <img :src="baseUrl+codeUrl" alt class="code" @click="codeClick" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -76,7 +76,8 @@ export default {
         key: "",
         checked: false,
       },
-      baseUrl: "http://127.0.0.1/heimamm/public",
+      baseUrl: process.env.VUE_APP_BASEURL,
+      codeUrl: "/captcha?type=login",
       // 表单验证的规则
       rules: {
         phone: [
@@ -123,6 +124,9 @@ export default {
     },
     signIn() {
       this.$refs.signIn.isShowDialog = true;
+    },
+    codeClick() {
+      this.codeUrl = "/captcha?type=sendsms&t=" + Date.now();
     },
   },
   //注册组件

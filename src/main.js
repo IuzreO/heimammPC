@@ -7,6 +7,11 @@ import ElementUI from 'element-ui';
 //饿了么css导入
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.config.productionTip = false
+//在全局中使用axios
+// import axios from 'axios'
+// Vue.prototype.$axios = axios.create({
+//   baseURL: process.env.VUE_APP_BASEURL
+// })
 //注册Vue.use(ElementUI)
 Vue.use(ElementUI);
 //将路由挂载到vue中
