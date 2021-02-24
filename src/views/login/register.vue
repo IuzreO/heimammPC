@@ -250,24 +250,19 @@ export default {
         //     phone: this.form.phone,
         //   },
         // })
+
         getRcode({
           code: this.form.code,
           phone: this.form.phone,
         })
           .then((res) => {
             //成功回调
-            window.console.log(res);
-            //改变验证码图片
-            this.codeUrl = "/captcha?type=sendsms&t=" + Date.now();
-            if (res.data.code == 200) {
-              this.$message.success(
-                "短信验证码为" + res.data.data.captcha + ""
-              );
-            } else {
-              this.$message.error("验证码错误或该手机已注册");
-            }
+            // window.console.log(res);
+            this.$message.success("短信验证码为" + res.data.captcha + "");
           })
           .catch((err) => {
+            // 改变验证码图片
+            this.codeUrl = "/captcha?type=sendsms&t=" + Date.now();
             window.console.log(err);
           });
       }

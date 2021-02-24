@@ -11,8 +11,7 @@ export function getRcode({ code, phone }) {
             code,
             phone
         },
-        // 携带cookie到服务器
-        withCredentials: true
+
     })
 }
 //封装注册接口
@@ -28,7 +27,5 @@ export function registerApi({ username, phone, email, avatar, password, rcode })
             password,
             rcode
         },
-        // 携带cookie到服务器
-        withCredentials: true
     })
 }

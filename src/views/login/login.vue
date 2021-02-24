@@ -74,7 +74,7 @@ export default {
         phone: "",
         password: "",
         key: "",
-        checked: false,
+        checked: false, // 协议状态
       },
       baseUrl: process.env.VUE_APP_BASEURL,
       codeUrl: "/captcha?type=login",
@@ -102,6 +102,19 @@ export default {
             trigger: "blur",
           },
         ],
+        checked: [
+          {
+            validator: (rule, value, callback) => {
+              //value为true才能通过验证
+              if (value) {
+                callback();
+              } else {
+                callback("请先阅读并同意条款协议");
+              }
+            },
+            trigger: "change",
+          },
+        ],
       },
     };
   },
@@ -109,10 +122,10 @@ export default {
     //点击登录时需要进行自动验证
     submit() {
       //优先判断用户是否勾选了协议
-      if (!this.form.checked) {
-        this.$message.error("请先阅读并同意条款协议");
-        return;
-      }
+      // if (!this.form.checked) {
+      //   this.$message.error("请先阅读并同意条款协议");
+      //   return;
+      // }
       //得到form对象
       this.$refs.form.validate((valid) => {
         if (valid) {
