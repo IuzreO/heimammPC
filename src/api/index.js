@@ -41,3 +41,16 @@ export function loginApi({ phone, password, code }) {
         },
     })
 }
+//获取用户信息接口
+export function getUserInfo() {
+    return _http({
+        url: '/info',
+    })
+}
+//退出登录接口
+export function logoutApi() {
+    return _http({
+        url: '/logout',
+
+    })
+}

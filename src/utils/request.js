@@ -3,6 +3,10 @@
 import axios from 'axios'
 // 在js中使用element组件 导入响应组件
 import { Message } from 'element-ui'
+//导入token.js
+import { getToken, removeToken } from '@/utils/token.js'
+//导入路由
+import router from '@/router/index.js'
 //创建一个axios副本
 let instance = axios.create({
     baseURL: 'http://127.0.0.1/heimamm/public',
@@ -14,6 +18,10 @@ instance.interceptors.request.use(function (config) {
     // console.log('请求拦截器');
     // console.log(config);
     // 请求成功 返回config
+    //在请求头中设置一个token
+    if (getToken()) {
+        config.headers.token = getToken()
+    }
     return config
 }, function (error) {
     //如果请求出错 返回error
@@ -33,6 +41,14 @@ instance.interceptors.response.use(function (response) {
     } else if (response.data.code == 202) {
         Message.error('验证码错误')
         return Promise.reject(new Error())
+    } else if (response.data.code == 206) {
+        Message.error('token参数错误')
+        //跳转到登录页
+        router.push('/login')
+        //删除token
+        removeToken()
+        return Promise.reject(new Error())
+
     }
 }, function (error) {
     //请求失败 返回error
