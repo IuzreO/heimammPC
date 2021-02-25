@@ -11,9 +11,9 @@ let instance = axios.create({
 })
 //请求拦截器
 instance.interceptors.request.use(function (config) {
-    console.log('请求拦截器');
-    console.log(config);
-    //请求成功 返回config
+    // console.log('请求拦截器');
+    // console.log(config);
+    // 请求成功 返回config
     return config
 }, function (error) {
     //如果请求出错 返回error
@@ -21,7 +21,7 @@ instance.interceptors.request.use(function (config) {
 })
 //响应拦截器
 instance.interceptors.response.use(function (response) {
-    console.log('响应拦截器');
+    // console.log('响应拦截器');
     console.log(response.data);
     if (response.data.code == 200) {
         //请求成功 返回response
@@ -29,6 +29,9 @@ instance.interceptors.response.use(function (response) {
     } else if (response.data.code == 0) {
         // 等效于VUE中的this.$message
         Message.error('手机号已注册或验证码不正确')
+        return Promise.reject(new Error())
+    } else if (response.data.code == 202) {
+        Message.error('验证码错误')
         return Promise.reject(new Error())
     }
 }, function (error) {

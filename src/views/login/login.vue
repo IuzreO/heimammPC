@@ -67,13 +67,17 @@
 <script>
 //导入子组件
 import register from "./register";
+//导入登录的api方法
+import { loginApi } from "@/api/index.js";
+//导入封装好的token.js文件
+import { saveToken, getToken } from "@/utils/token.js";
 export default {
   data() {
     return {
       form: {
-        phone: "",
-        password: "",
-        key: "",
+        phone: "13188888888",
+        password: "Aa8888!",
+        code: "",
         checked: false, // 协议状态
       },
       baseUrl: process.env.VUE_APP_BASEURL,
@@ -118,6 +122,16 @@ export default {
       },
     };
   },
+  // 生命周期钩子函数
+  created() {
+    let token = getToken();
+    //判断token是否已经存在
+    if (token) {
+      //跳转到首页
+      this.$message.info("已登录,即将跳转到首页");
+      this.$router.push("/index");
+    }
+  },
   methods: {
     //点击登录时需要进行自动验证
     submit() {
@@ -129,9 +143,23 @@ export default {
       //得到form对象
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.$message.success("登录成功");
+          loginApi({
+            phone: this.form.phone,
+            password: this.form.password,
+            code: this.form.code,
+          }).then((res) => {
+            window.console.log(res);
+            // 登录成功
+            // 提示用户登录成功
+            this.$message.success("登录成功");
+            // 跳转到首页
+            this.$router.push("/index");
+            // 将登录成功后返回的 token，保存本地（localstorage）
+            saveToken(res.data.token);
+          });
         } else {
           this.$message.error("登录失败");
+          this.codeUrl = "/captcha?type=sendsms&t=" + Date.now();
         }
       });
     },
@@ -142,6 +170,7 @@ export default {
       this.codeUrl = "/captcha?type=sendsms&t=" + Date.now();
     },
   },
+
   //注册组件
   components: {
     register,

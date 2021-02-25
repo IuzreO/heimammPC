@@ -196,18 +196,13 @@ export default {
     //确认点击事件
     comfirm() {
       //得到form对象
-
       this.$refs.form.validate((valid) => {
         if (valid) {
           registerApi(this.form).then((res) => {
             console.log(res);
-            if (res.data.code == 200) {
-              this.$message.success("注册成功");
-              //关闭遮罩层
-              this.isShowDialog = false;
-            } else {
-              this.$message.error("注册信息有误");
-            }
+            this.$message.success("注册成功");
+            //关闭遮罩层
+            this.isShowDialog = false;
           });
         } else {
           this.$message.error("注册失败");

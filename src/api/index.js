@@ -29,3 +29,15 @@ export function registerApi({ username, phone, email, avatar, password, rcode })
         },
     })
 }
+//封装登录接口
+export function loginApi({ phone, password, code }) {
+    return _http({
+        url: "/login",
+        method: "post",
+        data: {
+            phone,
+            password,
+            code
+        },
+    })
+}
