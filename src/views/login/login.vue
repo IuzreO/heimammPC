@@ -32,7 +32,7 @@
               <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="form.code"></el-input>
             </el-col>
             <el-col :span="8">
-              <img :src="baseUrl+codeUrl" alt class="code" @click="codeClick" />
+              <img :src="codeUrl" alt class="code" @click="codeClick" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -78,10 +78,10 @@ export default {
         phone: "13188888888",
         password: "Aa8888!",
         code: "",
-        checked: false, // 协议状态
+        checked: true, // 协议状态
       },
       baseUrl: process.env.VUE_APP_BASEURL,
-      codeUrl: "/captcha?type=login",
+      codeUrl: process.env.VUE_APP_BASEURL + "/captcha?type=login",
       // 表单验证的规则
       rules: {
         phone: [
@@ -159,7 +159,7 @@ export default {
           });
         } else {
           this.$message.error("登录失败");
-          this.codeUrl = "/captcha?type=sendsms&t=" + Date.now();
+          this.codeUrl = "/captcha?type=login&t=" + Date.now();
         }
       });
     },
@@ -167,7 +167,7 @@ export default {
       this.$refs.signIn.isShowDialog = true;
     },
     codeClick() {
-      this.codeUrl = "/captcha?type=sendsms&t=" + Date.now();
+      this.codeUrl = this.baseUrl + "/captcha?type=login&t=" + Date.now();
     },
   },
 

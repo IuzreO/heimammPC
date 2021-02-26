@@ -42,7 +42,7 @@ export function loginApi({ phone, password, code }) {
     })
 }
 //获取用户信息接口
-export function getUserInfo() {
+export function getUserInfoApi() {
     return _http({
         url: '/info',
     })
