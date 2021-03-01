@@ -148,7 +148,6 @@ export default {
             password: this.form.password,
             code: this.form.code,
           }).then((res) => {
-            window.console.log(res);
             // 登录成功
             // 提示用户登录成功
             this.$message.success("登录成功");

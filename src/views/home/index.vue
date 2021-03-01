@@ -76,7 +76,6 @@ export default {
       this.$router.push("/login");
     }
     getUserInfoApi().then((res) => {
-      console.log(res);
       this.userInfo = res.data;
       this.$store.state.userInfo = this.userInfo;
     });

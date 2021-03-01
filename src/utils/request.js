@@ -16,7 +16,7 @@ let instance = axios.create({
 //请求拦截器
 instance.interceptors.request.use(function (config) {
     // console.log('请求拦截器');
-    console.log(config);
+    // console.log(config);
     // 请求成功 返回config
     //在请求头中设置一个token
     if (getToken()) {
@@ -30,7 +30,7 @@ instance.interceptors.request.use(function (config) {
 //响应拦截器
 instance.interceptors.response.use(function (response) {
     // console.log('响应拦截器');
-    console.log(response.data);
+    // console.log(response.data);
     if (response.data.code == 200) {
         //请求成功 返回response
         return response.data
