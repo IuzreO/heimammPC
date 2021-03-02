@@ -3,7 +3,7 @@
     <!-- visible.sync="设置弹框显示与消失" -->
     <el-dialog :visible.sync="isShow" width="600px">
       <div slot="title">
-        <div class="title">新增学科</div>
+        <div class="title">{{mode==='add'?'新增学科':'编辑学科'}}</div>
       </div>
       <el-form label-width="100px" :model="form" :rules="rules" ref="form">
         <el-form-item label="学科编号" prop="rid">
@@ -32,8 +32,11 @@
 
 <script>
 // 导入封装好的接口
-import { addSubjectApi } from "@/api/index";
+import { addSubjectApi, editSubjectApi } from "@/api/index";
 export default {
+  //当前面板模式
+  //当前数据源
+  props: ["mode", "formData"],
   data() {
     return {
       isShow: false,
@@ -50,16 +53,44 @@ export default {
       },
     };
   },
+  watch: {
+    mode(val) {
+      //新增模式
+      if (val === "add") {
+        this.form = {
+          rid: "",
+          name: "",
+          short_name: "",
+          intro: "",
+          remark: "",
+        };
+      } else {
+        //编辑模式
+        //使用深拷贝将formData赋值给form
+        this.form = JSON.parse(JSON.stringify(this.formData));
+      }
+    },
+  },
   methods: {
     submitClick() {
       this.$refs.form.validate((result) => {
         if (result) {
-          addSubjectApi(this.form).then(() => {
-            this.$message.success("新增成功");
-            this.isShow = false;
-            // this.$parent.search();
-            this.$emit("getData");
-          });
+          if (this.mode === "add") {
+            addSubjectApi(this.form).then(() => {
+              this.$message.success("新增成功");
+              //重置表单数据
+              this.$refs.form.resetFields();
+              this.isShow = false;
+              // this.$parent.search();
+              this.$emit("getData");
+            });
+          } else {
+            editSubjectApi(this.form).then(() => {
+              this.$message.success("修改成功");
+              this.isShow = false;
+              this.$emit("getData");
+            });
+          }
         }
       });
     },

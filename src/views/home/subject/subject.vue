@@ -50,13 +50,13 @@
         </el-table-column>
         <el-table-column label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button type="text">编辑</el-button>
+            <el-button type="text" @click="editSubject(scope.row)">编辑</el-button>
             <el-button
               @click="changeStatus(scope.row)"
               style="margin:0 10px"
               type="text"
             >{{scope.row.status==0?'启用':"禁用"}}</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" @click="delSubject(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -87,13 +87,17 @@
       ></el-pagination>
     </el-card>
     <!-- 使用子组件 -->
-    <addSubject ref="add" @getData="getSubjectData"></addSubject>
+    <addSubject ref="add" @getData="getSubjectData" :mode="mode" :formData="formData"></addSubject>
   </div>
 </template>
 
 <script>
 //导入接口调用的Api
-import { getSubjectDataApi, changeStatusApi } from "@/api/index.js";
+import {
+  getSubjectDataApi,
+  changeStatusApi,
+  delSubjectApi,
+} from "@/api/index.js";
 //导入子组件
 import addSubject from "./addSubject";
 export default {
@@ -116,6 +120,10 @@ export default {
       pagesize: 2,
       // 总条数
       total: 0,
+      //当前面板模式
+      mode: "",
+      //当前数据源
+      formData: "",
     };
   },
   created() {
@@ -135,7 +143,41 @@ export default {
   methods: {
     //打开新增面板
     add() {
+      this.mode = "add";
       this.$refs.add.isShow = true;
+    },
+    //编辑功能实现
+    editSubject(row) {
+      this.mode = "edit" + Date.now();
+      this.formData = row;
+      this.$refs.add.isShow = true;
+    },
+    //删除功能实现
+    delSubject(row) {
+      this.$confirm("是否删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          delSubjectApi(row.id).then(() => {
+            //判断是否只有一条信息,如果是则页数减一
+            if (this.subjectList.length === 1) {
+              this.currentPage = -1;
+            }
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            this.getSubjectData();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     //实现状态切换功能
     changeStatus(row) {
@@ -144,7 +186,7 @@ export default {
       }).then(() => {
         this.$message.success("修改状态成功");
         //刷新数据
-        this.search();
+        this.getSubjectData();
       });
     },
     //实现搜索功能

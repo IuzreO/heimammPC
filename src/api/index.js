@@ -62,3 +62,59 @@ export function addSubjectApi(data) {
         data
     })
 }
+//封装学科编辑接口
+export function editSubjectApi(data) {
+    return _http({
+        url: '/subject/edit',
+        method: 'post',
+        data
+    })
+}
+//封装删除学科接口
+export function delSubjectApi(id) {
+    return _http({
+        url: '/subject/remove',
+        method: 'post',
+        data: {
+            id
+        }
+    })
+}
+//封装企业列表信息接口
+export function getBusinessDataApi(params) {
+    return _http({
+        url: '/enterprise/list',
+        params
+    })
+}
+//封装题库列表信息接口
+export function getQuestionDataApi(params) {
+    return _http({
+        url: '/question/list',
+        params
+    })
+}
+//封装题库状态修改接口
+export function editQuestionStatusApi(data) {
+    return _http({
+        url: "/question/status",
+        method: 'post',
+        data
+    })
+}
+//封装面板数据接口
+export function dataTitleApi() {
+    return _http({
+        url: "/data/title",
+        method: 'post',
+
+    })
+}
+//封装企业题目数据接口
+export function dataStatisticsApi() {
+    return _http({
+        url: "/data/statistics",
+        method: 'post',
+
+    })
+}
