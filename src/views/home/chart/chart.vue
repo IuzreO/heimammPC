@@ -54,6 +54,7 @@ export default {
   },
   //dom加载完之后的钩子
   mounted() {
+    //注意:因为是发送的异步请求,所以dom加载可能比发送请求更快,所以将echarts图表放入请求成功的then函数中
     //请求封装好的企业题目数据接口
     dataStatisticsApi({}).then((res) => {
       // 基于准备好的dom，初始化echarts实例

@@ -1,12 +1,35 @@
 <template>
   <div>
     <p>百分比模版</p>
-    <el-progress :text-inside="true" :stroke-width="20" :percentage="50" status="exception"></el-progress>
-    <el-progress :text-inside="true" :stroke-width="26" :percentage="70"></el-progress>
-    <el-progress :text-inside="true" :stroke-width="22" :percentage="80" status="warning"></el-progress>
-    <el-progress :text-inside="true" :stroke-width="24" :percentage="100" status="success"></el-progress>
+    <el-progress
+      :text-inside="true"
+      :stroke-width="20"
+      :percentage="50"
+      status="exception"
+    ></el-progress>
+    <el-progress
+      :text-inside="true"
+      :stroke-width="26"
+      :percentage="70"
+    ></el-progress>
+    <el-progress
+      :text-inside="true"
+      :stroke-width="22"
+      :percentage="80"
+      status="warning"
+    ></el-progress>
+    <el-progress
+      :text-inside="true"
+      :stroke-width="24"
+      :percentage="100"
+      status="success"
+    ></el-progress>
     <p>Element - ui 输入框</p>
-    <el-input placeholder="请输入内容" prefix-icon="el-icon-user" v-model="input2"></el-input>
+    <el-input
+      placeholder="请输入内容"
+      prefix-icon="el-icon-user"
+      v-model="input2"
+    ></el-input>
     <p>Element - ui 栅格系统</p>
     <el-row :gutter="10">
       <!-- gutter 栅格间隔 -->
@@ -32,7 +55,7 @@
     <el-link type="info">信息链接</el-link>
     <p>Element - ui 多选框</p>
     <el-checkbox v-model="checked">备选项</el-checkbox>
-    {{checked}}
+    {{ checked }}
     <p>Element - ui 按钮</p>
     <el-row>
       <el-button>默认按钮</el-button>
@@ -70,22 +93,22 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      input2: "请输入帐号",
+      input2: '请输入帐号',
       checked: true,
       formInline: {
-        user: "",
-        region: "",
-      },
-    };
+        user: '',
+        region: ''
+      }
+    }
   },
   methods: {
-    onSubmit() {
-      console.log(this.formInline.user, this.formInline.region);
-    },
-  },
-};
+    onSubmit () {
+      console.log(this.formInline.user, this.formInline.region)
+    }
+  }
+}
 </script>
 
 <style>

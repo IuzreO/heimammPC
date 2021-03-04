@@ -8,7 +8,7 @@
             <el-option
               :label="item.name"
               :value="item.id"
-              v-for="(item,index) in subjectList"
+              v-for="(item, index) in subjectList"
               :key="index"
             ></el-option>
           </el-select>
@@ -25,7 +25,7 @@
             <el-option
               :label="item.name"
               :value="item.id"
-              v-for="(item,index) in BusinessList"
+              v-for="(item, index) in BusinessList"
               :key="index"
             ></el-option>
           </el-select>
@@ -45,7 +45,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="作者" prop="username">
-          <el-select v-model="form.username" placeholder="请选择作者"></el-select>
+          <el-select
+            v-model="form.username"
+            placeholder="请选择作者"
+          ></el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择状态">
@@ -67,7 +70,9 @@
         <el-form-item>
           <el-button type="primary" @click="search">搜索</el-button>
           <el-button @click="reset">清除</el-button>
-          <el-button type="primary" class="el-icon-plus">新增试题</el-button>
+          <el-button type="primary" class="el-icon-plus" @click="add"
+            >新增试题</el-button
+          >
         </el-form-item>
       </el-form>
     </el-card>
@@ -77,21 +82,32 @@
         <!-- data数据源 -->
         <el-table :data="questionList" border>
           <el-table-column label="序号" type="index"></el-table-column>
-          <el-table-column label="题目" prop="title" width="200px"></el-table-column>
+          <el-table-column
+            label="题目"
+            prop="title"
+            width="200px"
+          ></el-table-column>
           <el-table-column label="学科&阶段">
             <template slot-scope="scope">
-              {{scope.row.subject_name}}
-              {{{1: "初级", 2: "中级", 3: "高级"}[scope.row.step]}}
+              {{ scope.row.subject_name }}
+              {{ { 1: '初级', 2: '中级', 3: '高级' }[scope.row.step] }}
               <!-- {{scope.row.subject_name}},{{scope.row.step==1?'初级':scope.row.step==2?'中级':'高级'}} -->
             </template>
           </el-table-column>
           <el-table-column label="题型">
-            <template slot-scope="scope">{{{1: "单选", 2: "多选", 3: "简答"}[scope.row.type]}}</template>
+            <template slot-scope="scope">{{
+              { 1: '单选', 2: '多选', 3: '简答' }[scope.row.type]
+            }}</template>
           </el-table-column>
-          <el-table-column label="企业" prop="enterprise_name"></el-table-column>
+          <el-table-column
+            label="企业"
+            prop="enterprise_name"
+          ></el-table-column>
           <el-table-column label="创建者" prop="username"></el-table-column>
           <el-table-column label="状态">
-            <template slot-scope="scope">{{{0: "禁用", 1: "启用"}[scope.row.status]}}</template>
+            <template slot-scope="scope">{{
+              { 0: '禁用', 1: '启用' }[scope.row.status]
+            }}</template>
           </el-table-column>
           <el-table-column label="访问量" prop="reads"></el-table-column>
           <el-table-column label="操作">
@@ -101,7 +117,8 @@
                 type="primary"
                 @click="changeStatus(scope.row)"
                 style="margin:0 5px"
-              >{{scope.row.status==0?'启用':'禁用'}}</el-link>
+                >{{ scope.row.status == 0 ? '启用' : '禁用' }}</el-link
+              >
               <el-link type="primary">删除</el-link>
             </template>
           </el-table-column>
@@ -133,35 +150,38 @@
         ></el-pagination>
       </el-card>
     </div>
+    <!-- 使用子组件 -->
+    <addQuestion ref="addQuestion"></addQuestion>
   </div>
 </template>
-
 <script>
 //导入学科和企业信息接口
 import {
   getSubjectDataApi,
   getBusinessDataApi,
   getQuestionDataApi,
-  editQuestionStatusApi,
-} from "@/api/index.js";
+  editQuestionStatusApi
+} from '@/api/index.js'
+//导入addQuestion子组件
+import addQuestion from './addQuestion'
 export default {
-  data() {
+  data () {
     return {
       form: {
-        subject: "", //学科
-        step: "", //阶段
-        enterprise: "", //企业
-        type: "", //题型
-        diffculty: "", //难度
-        username: "", //作者
-        status: "", //状态,
-        create_date: "", //日期
-        title: "", //标题
+        subject: '', //学科
+        step: '', //阶段
+        enterprise: '', //企业
+        type: '', //题型
+        diffculty: '', //难度
+        username: '', //作者
+        status: '', //状态,
+        create_date: '', //日期
+        title: '' //标题
       },
       subjectList: [], //学科列表
       BusinessList: [], //企业列表
       questionList: [], //题库列表
-      rules: {},
+      rules: {}, //表单验证
       // 当前页
       currentPage: 1,
       // 页容量集合
@@ -169,89 +189,97 @@ export default {
       // 页容量
       pagesize: 2,
       // 总条数
-      total: 0,
-    };
+      total: 0
+    }
   },
-  created() {
+  created () {
     //得到学科下拉选项
-    this.getSubject();
+    this.getSubject()
     //得到企业下拉选项
-    this.getBusiness();
+    this.getBusiness()
     //得到题库列表数据
-    this.getQuestionData();
+    this.getQuestionData()
   },
   methods: {
-    getSubject() {
+    getSubject () {
       //获取学科列表下拉框中的数据
-      getSubjectDataApi({}).then((res) => {
-        this.subjectList = res.data.items;
-      });
+      getSubjectDataApi({}).then(res => {
+        this.subjectList = res.data.items
+      })
     },
-    getBusiness() {
+    getBusiness () {
       //获取企业列表下拉框中的数据
-      getBusinessDataApi({}).then((res) => {
-        this.BusinessList = res.data.items;
-      });
+      getBusinessDataApi({}).then(res => {
+        this.BusinessList = res.data.items
+      })
     },
-    getQuestionData() {
+    getQuestionData () {
       //获取题库列表数据
       getQuestionDataApi({
         page: this.currentPage, //请求的页码
         limit: this.pagesize, //页容量
-        ...this.form,
-      }).then((res) => {
-        this.questionList = res.data.items;
+        ...this.form
+      }).then(res => {
+        this.questionList = res.data.items
         //console.log(this.questionList);
         //保存数据的总条数
-        this.total = res.data.pagination.total;
-      });
+        this.total = res.data.pagination.total
+      })
     },
     //  当当前页发生发变时会触发
-    currentChange(val) {
+    currentChange (val) {
       //将改变后的当前页赋值给 currentPage
-      this.currentPage = val;
+      this.currentPage = val
       //重新发送请求到服务器得到最新的数据
-      this.getQuestionData();
+      this.getQuestionData()
     },
     // 当页容量发生改变时会触发
-    sizeChange(val) {
+    sizeChange (val) {
       //将改变后的页容量赋值给 pagesize
-      this.pagesize = val;
+      this.pagesize = val
       //重新发送请求到服务器得到最新的数据
-      this.getQuestionData();
+      this.getQuestionData()
     },
     //实现搜索功能
-    search() {
+    search () {
       //设置当前页为第一页
-      this.currentPage = 1;
+      this.currentPage = 1
       //调用获取题库数据函数
-      this.getQuestionData();
+      this.getQuestionData()
     },
     //实现清除功能
-    reset() {
-      this.$refs.form.resetFields();
+    reset () {
+      this.$refs.form.resetFields()
       // 刷新数据
-      this.getQuestionData();
+      this.getQuestionData()
     },
     //实现状态切换功能
-    changeStatus(row) {
+    changeStatus (row) {
       editQuestionStatusApi({
-        id: row.id,
-      }).then((res) => {
+        id: row.id
+      }).then(res => {
         if (res.code == 200) {
-          this.$message.success("修改状态成功");
+          this.$message.success('修改状态成功')
           // 刷新数据
-          this.getQuestionData();
+          this.getQuestionData()
         } else {
-          this.$message.error("修改状态失败");
+          this.$message.error('修改状态失败')
         }
-      });
+      })
     },
+    //新增题库点击事件
+    add () {
+      this.$refs.addQuestion.isShow = true
+    }
   },
-};
+  //注册子组件
+  components: {
+    addQuestion
+  }
+}
 </script>
 
-<style lang='less'>
+<style lang="less">
 .top {
   .title {
     width: 400px;
