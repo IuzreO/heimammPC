@@ -8,7 +8,11 @@
         :key="index"
       >
         <el-col :span="16" :offset="2">
-          <el-radio :label="item.label" v-model="form.single_select_answer">
+          <el-radio
+            :label="item.label"
+            v-model="form.single_select_answer"
+            @change="radioChange"
+          >
             {{ item.label }}
             <el-input v-model="item.text"></el-input>
           </el-radio>
@@ -45,7 +49,7 @@
     <div v-if="form.type == 3">
       <p>
         <el-input
-          v-model="value"
+          v-model="form.short_answer"
           type="textarea"
           rows="5"
           placeholder
@@ -63,6 +67,11 @@ export default {
   data () {
     return {
       imageUrl: ''
+    }
+  },
+  methods: {
+    radioChange () {
+      this.$emit('validateForm', 'single_select_answer')
     }
   },
   //注册子组件

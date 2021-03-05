@@ -118,3 +118,11 @@ export function dataStatisticsApi() {
 
     })
 }
+//封装新增题库提交接口
+export function addQuestionData(data) {
+    return _http({
+        url: "/question/add",
+        method: "post",
+        data
+    })
+}

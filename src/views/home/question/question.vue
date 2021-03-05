@@ -82,11 +82,11 @@
         <!-- data数据源 -->
         <el-table :data="questionList" border>
           <el-table-column label="序号" type="index"></el-table-column>
-          <el-table-column
-            label="题目"
-            prop="title"
-            width="200px"
-          ></el-table-column>
+          <el-table-column label="题目" width="200px">
+            <template v-slot="scope">
+              <div v-html="scope.row.title"></div>
+            </template>
+          </el-table-column>
           <el-table-column label="学科&阶段">
             <template slot-scope="scope">
               {{ scope.row.subject_name }}
@@ -151,7 +151,7 @@
       </el-card>
     </div>
     <!-- 使用子组件 -->
-    <addQuestion ref="addQuestion"></addQuestion>
+    <addQuestion ref="addQuestion" @search="search"></addQuestion>
   </div>
 </template>
 <script>

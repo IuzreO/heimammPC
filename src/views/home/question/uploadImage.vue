@@ -1,6 +1,7 @@
 <template>
   <div class="uploadImage">
     <el-upload
+      v-if="mode === 'img'"
       class="avatar-uploader"
       :action="uploadUrl"
       :show-file-list="false"
@@ -10,12 +11,34 @@
       <img v-if="imageUrl" :src="imageUrl" class="avatar" />
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
+    <el-upload
+      v-else
+      class="upload-demo"
+      :action="uploadUrl"
+      :show-file-list="false"
+      :on-success="uploadSuccess"
+    >
+      <div class="myVideo">
+        <el-button size="small" type="primary">点击上传</el-button>
+        <video v-if="imageUrl" :src="imageUrl"></video>
+        <div slot="tip" class="el-upload__tip">
+          只能上传视频文件
+        </div>
+      </div>
+    </el-upload>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['item'],
+  //mode:img上传图片,vidio上传视频
+  props: {
+    item: Object,
+    mode: {
+      type: String,
+      default: 'img'
+    }
+  },
   data () {
     return {
       //图片上传后的路径
@@ -29,7 +52,13 @@ export default {
   methods: {
     uploadSuccess (res) {
       this.imageUrl = this.baseUrl + '/' + res.data.url
-      this.item.image = res.data.url
+      //判断上传的文件图片还是视频
+      if (this.mode === 'img') {
+        this.item.image = res.data.url
+      } else {
+        //视频上传成功后将视频图片传递给父组件
+        this.$emit('passvideo', res.data.url)
+      }
     },
     beforeAvatarUpload (file) {
       const isJPG =
@@ -74,6 +103,12 @@ export default {
     width: 162px;
     height: 162px;
     display: block;
+  }
+  .myVideo {
+    video {
+      display: block;
+      width: 300px;
+    }
   }
 }
 </style>
