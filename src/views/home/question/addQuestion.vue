@@ -2,7 +2,9 @@
   <div class="addQuestion">
     <template>
       <el-dialog class="addSubject" :visible.sync="isShow" :fullscreen="true">
-        <div slot="title" class="title">新增题库测试</div>
+        <div slot="title" class="title">
+          {{ mode == 'add' ? '新增题库测试 ' : '编辑题库测试' }}
+        </div>
         <!-- 表单内容 -->
         <div class="content">
           <el-form :model="form" :rules="rules" ref="form">
@@ -115,11 +117,12 @@
   </div>
 </template>
 <script>
-//导入学科,企业信息,新增题库接口
+//导入学科,企业信息,新增,编辑,题库接口
 import {
   getSubjectDataApi,
   getBusinessDataApi,
-  addQuestionData
+  addQuestionDataApi,
+  editQuestionDataApi
 } from '@/api/index.js'
 // regionData`是省市区三级联动数据（不带“全部”选项）
 import { regionData } from 'element-china-area-data'
@@ -257,12 +260,23 @@ export default {
       //判断是否验证通过
       this.$refs.form.validate(valid => {
         if (valid) {
-          addQuestionData(this.form).then(() => {
-            // 添加成功===   提示   关闭弹窗   刷新列表
-            this.$message.success('添加成功')
-            this.isShow = false
-            this.$emit('search')
-          })
+          // 判断mode的值 如果为add 则调用新增接口
+          if (this.mode == 'add') {
+            addQuestionDataApi(this.form).then(() => {
+              // 添加成功===   提示   关闭弹窗   刷新列表
+              this.$message.success('添加成功')
+              this.isShow = false
+              this.$emit('search')
+            })
+          } else {
+            // 如果为edit 则调用编辑接口
+            editQuestionDataApi(this.form).then(() => {
+              // 添加成功===   提示   关闭弹窗   刷新列表
+              this.$message.success('编辑成功')
+              this.isShow = false
+              this.$emit('search')
+            })
+          }
         } else {
           this.$message.error('验证失败')
           return false
@@ -275,7 +289,8 @@ export default {
     quillEditor,
     allSelect,
     uploadImage
-  }
+  },
+  props: ['mode']
 }
 </script>
 <style lang="less">

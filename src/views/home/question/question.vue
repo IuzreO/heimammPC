@@ -112,14 +112,16 @@
           <el-table-column label="访问量" prop="reads"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-link type="primary">编辑</el-link>
+              <el-link type="primary" @click="edit(scope.row)">编辑</el-link>
               <el-link
                 type="primary"
                 @click="changeStatus(scope.row)"
                 style="margin:0 5px"
                 >{{ scope.row.status == 0 ? '启用' : '禁用' }}</el-link
               >
-              <el-link type="primary">删除</el-link>
+              <el-link type="primary" @click="remove(scope.row.id)"
+                >删除</el-link
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -151,7 +153,7 @@
       </el-card>
     </div>
     <!-- 使用子组件 -->
-    <addQuestion ref="addQuestion" @search="search"></addQuestion>
+    <addQuestion ref="addQuestion" @search="search" :mode="mode"></addQuestion>
   </div>
 </template>
 <script>
@@ -160,13 +162,15 @@ import {
   getSubjectDataApi,
   getBusinessDataApi,
   getQuestionDataApi,
-  editQuestionStatusApi
+  editQuestionStatusApi,
+  removeQuestionDataApi
 } from '@/api/index.js'
 //导入addQuestion子组件
 import addQuestion from './addQuestion'
 export default {
   data () {
     return {
+      mode: 'add',
       form: {
         subject: '', //学科
         step: '', //阶段
@@ -205,12 +209,14 @@ export default {
       //获取学科列表下拉框中的数据
       getSubjectDataApi({}).then(res => {
         this.subjectList = res.data.items
+        console.log('学科信息:', res)
       })
     },
     getBusiness () {
       //获取企业列表下拉框中的数据
       getBusinessDataApi({}).then(res => {
         this.BusinessList = res.data.items
+        console.log('企业信息:', res)
       })
     },
     getQuestionData () {
@@ -220,10 +226,14 @@ export default {
         limit: this.pagesize, //页容量
         ...this.form
       }).then(res => {
+        res.data.items.forEach(item => {
+          item.city = item.city.split(',')
+          item.multiple_select_answer = item.multiple_select_answer.split(',')
+        })
         this.questionList = res.data.items
-        //console.log(this.questionList);
         //保存数据的总条数
         this.total = res.data.pagination.total
+        console.log('题库列表:', res)
       })
     },
     //  当当前页发生发变时会触发
@@ -269,7 +279,28 @@ export default {
     },
     //新增题库点击事件
     add () {
+      this.mode = 'add'
       this.$refs.addQuestion.isShow = true
+    },
+    //修改题库点击事件
+    edit (row) {
+      this.mode = 'edit'
+      this.$refs.addQuestion.isShow = true
+      //将数据深拷贝到编辑页面
+      this.$refs.addQuestion.form = JSON.parse(JSON.stringify(row))
+    },
+    //实现删除功能
+    remove (id) {
+      this.$confirm('确定删除', '提示', {
+        comfirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        removeQuestionDataApi({ id }).then(() => {
+          this.$message.success('删除成功')
+          this.search()
+        })
+      })
     }
   },
   //注册子组件

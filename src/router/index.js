@@ -20,91 +20,88 @@ import 'nprogress/nprogress.css'
 Vue.use(VueRouter)
 //4.实例化和配置
 const router = new VueRouter({
-    routes: [
+  routes: [
+    {
+      path: '/test',
+      component: test,
+      meta: {
+        title: '测试页'
+      }
+    },
+    {
+      path: '/login',
+      component: login,
+      meta: {
+        title: '登录页'
+      }
+    },
+    {
+      path: '/index',
+      component: index,
+      meta: {
+        title: '首页'
+      },
+      // 嵌套的路由规则
+      children: [
+        // 地址不需要写/
+        // 最终解析的是 /index/heme/chart
         {
-            path: '/test',
-            component: test,
-            meta: {
-                title: "测试页"
-            }
+          path: '/home/chart',
+          component: chart,
+          // ## 路由 - 路由元信息
+          meta: {
+            title: '数据概览'
+          }
+        },
 
+        {
+          path: '/home/userList',
+          component: userList,
+          meta: {
+            title: '用户列表'
+          }
         },
         {
-            path: '/login',
-            component: login,
-            meta: {
-                title: "登录页"
-            }
+          path: '/home/question',
+          component: question,
+          meta: {
+            title: '题库列表'
+          }
         },
         {
-            path: '/index',
-            component: index,
-            meta: {
-                title: "首页"
-            },
-            // 嵌套的路由规则
-            children: [
-                // 地址不需要写/
-                // 最终解析的是 /index/heme/chart
-                {
-                    path: '/home/chart',
-                    component: chart,
-                    // ## 路由 - 路由元信息
-                    meta: {
-                        title: "数据概览"
-                    }
-                },
-
-                {
-                    path: '/home/userList',
-                    component: userList,
-                    meta: {
-                        title: "用户列表"
-                    }
-                },
-                {
-                    path: '/home/question',
-                    component: question,
-                    meta: {
-                        title: "题库列表"
-                    }
-                },
-                {
-                    path: '/home/business',
-                    component: business,
-                    meta: {
-                        title: "企业列表"
-                    }
-                },
-                {
-                    path: '/home/subject',
-                    component: subject,
-                    meta: {
-                        title: "学科列表"
-                    }
-                },
-            ]
+          path: '/home/business',
+          component: business,
+          meta: {
+            title: '企业列表'
+          }
         },
-        //路由重定向
         {
-            path: '*',
-            redirect: '/index'
+          path: '/home/subject',
+          component: subject,
+          meta: {
+            title: '学科列表'
+          }
         }
-    ]
+      ]
+    },
+    //路由重定向
+    {
+      path: '*',
+      redirect: '/index'
+    }
+  ]
 })
 //导航守卫
 router.beforeEach((to, from, next) => {
-    console.log(to, from);
-    NProgress.start()
-    next()
+  console.log(to, from)
+  NProgress.start()
+  next()
 })
 router.afterEach((to, from) => {
-    console.log(to, from);
-    NProgress.done()
-    //to.meta是固定写法，meta之后的是根据定义的进行获取
-    document.title = to.meta.title
-
-
+  console.log(to, from)
+  NProgress.done()
+  //to.meta是固定写法，meta之后的是根据定义的进行获取
+  document.title = to.meta.title
 })
 
 //5.暴露给外界
